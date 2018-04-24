@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 algo = ['firstseq', 'skmpp', 'cache', 'rcc', 'hybrid_12']
 data_name = 'covtype'
 k = 20
-queryinterval = 1000
+queryinterval = 100
 
 folder = data_name + '/k-' + str(k) + '/queryinterval-' + str(queryinterval)
 with open(folder + '/firstseq/querytime' + '.txt') as f:
