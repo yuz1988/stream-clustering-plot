@@ -4,37 +4,52 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 algo = ['firstseq', 'skmpp', 'cache', 'rcc', 'hybrid_12']
+method = ['streamkm++', 'CC', 'RCC']
 data_name = 'covtype'
 k = 20
-queryinterval = 100
+query_interval = [100, 500, 1000, 2000, 3000, 4000, 5000]
+length = len(query_interval)
+firstseq_query = []
+skmpp_query = []
+cache_query = []
+rcc_query = []
 
-folder = data_name + '/k-' + str(k) + '/queryinterval-' + str(queryinterval)
-with open(folder + '/firstseq/querytime' + '.txt') as f:
-    firstseq_query = list(map(float, f.read().splitlines()))
-with open(folder + '/skmpp/querytime' + '.txt') as f:
-    skmpp_query = list(map(float, f.read().splitlines()))
-with open(folder + '/cache/querytime' + '.txt') as f:
-    cache_query = list(map(float, f.read().splitlines()))
-with open(folder + '/rcc/querytime' + '.txt') as f:
-    rcc_query = list(map(float, f.read().splitlines()))
+# read data
+for i in range(length):
+    folder = data_name + '/k-' + str(k) + '/queryinterval-' + str(query_interval[i])
+    # with open(folder + '/firstseq/querytime' + '.txt') as f:
+    #     firstseq_query[i] = sum(list(map(float, f.read().splitlines())))
+    with open(folder + '/skmpp/querytime' + '.txt') as f:
+        skmpp_query.append(sum(list(map(float, f.read().splitlines()))))
+    with open(folder + '/cache/querytime' + '.txt') as f:
+        cache_query.append(sum(list(map(float, f.read().splitlines()))))
+    with open(folder + '/rcc/querytime' + '.txt') as f:
+        rcc_query.append(sum(list(map(float, f.read().splitlines()))))
 
-print(sum(skmpp_query))
-print(sum(cache_query))
-print(sum(rcc_query))
+print(skmpp_query)
+print(cache_query)
+print(rcc_query)
 
+firstseq_update = []
+skmpp_update = []
+cache_update = []
+rcc_update = []
 
-with open(folder + '/firstseq/updatetime' + '.txt') as f:
-    firstseq_update = list(map(float, f.read().splitlines()))
-with open(folder + '/skmpp/updatetime' + '.txt') as f:
-    skmpp_update = list(map(float, f.read().splitlines()))
-with open(folder + '/cache/updatetime' + '.txt') as f:
-    cache_update = list(map(float, f.read().splitlines()))
-with open(folder + '/rcc/updatetime' + '.txt') as f:
-    rcc_update = list(map(float, f.read().splitlines()))
+# read data
+for i in range(length):
+    folder = data_name + '/k-' + str(k) + '/queryinterval-' + str(query_interval[i])
+    # with open(folder + '/firstseq/querytime' + '.txt') as f:
+    #     firstseq_update.append(sum(list(map(float, f.read().splitlines()))))
+    with open(folder + '/skmpp/updatetime' + '.txt') as f:
+        skmpp_update.append(sum(list(map(float, f.read().splitlines()))))
+    with open(folder + '/cache/updatetime' + '.txt') as f:
+        cache_update.append(sum(list(map(float, f.read().splitlines()))))
+    with open(folder + '/rcc/updatetime' + '.txt') as f:
+        rcc_update.append(sum(list(map(float, f.read().splitlines()))))
 
-print(sum(skmpp_update))
-print(sum(cache_update))
-print(sum(rcc_update))
+print(skmpp_update)
+print(cache_update)
+print(rcc_update)
 
 # configuration
 mpl.rcParams['font.family'] = 'Arial'
@@ -48,80 +63,46 @@ mpl.rcParams['figure.figsize'] = [5.2, 3.9]
 # mpl.rcParams['legend.frameon'] = False
 
 
-# # msg transmitted
-# plt.figure(0)
-# plt.plot(exact[0], exact[2], marker='o', color='r')
-# plt.plot(baseline[0], baseline[2], marker='*', color='g')
-# plt.plot(uniform[0], uniform[2], marker='s', color='b')
-# plt.plot(nonuniform[0], nonuniform[2], marker='+', color='k')
-#
-# # labels
-# plt.xlabel('number of sites')
-# plt.ylabel('number of messages')
-#
-# # xlim, ylim
-# plt.ylim(ymin=0)
-#
-# # legend
-# plt.legend(method, ncol=2)
-#
+# plot begins
+plt.figure(0)
+x = range(length)
+plt.plot(x, skmpp_query, marker='o', color='r')
+plt.plot(x, cache_query, marker='*', color='g')
+plt.plot(x, rcc_query, marker='s', color='b')
+
+# x-ticks
+plt.xticks(np.arange(length), ('100', '500', '1000', '2000', '3000', '4000', '5000'))
+
+# labels
+plt.xlabel('query interval')
+plt.ylabel('total query time (second)')
+
+# legend
+plt.legend(method)
+
+plt.ylim(ymin=0)
+
 # # show or save
 # # plt.show()
-# plt.savefig("figs/" + data_name + "-message.pdf", dpi=600, bbox_inches='tight')
+plt.savefig("figs/" + data_name + "-query.png", dpi=600, bbox_inches='tight')  # transparent
 
 
-# runtime delay
-# plt.figure(1)
-# plt.plot(exact[0], exact[3], marker='o', color='r')
-# plt.plot(baseline[0], baseline[3], marker='*', color='g')
-# plt.plot(uniform[0], uniform[3], marker='s', color='b')
-# plt.plot(nonuniform[0], nonuniform[3], marker='+', color='k')
-#
-# # labels
-# plt.xlabel('number of sites (Hepar II)')
-# plt.ylabel('training time (sec)')
-#
-# # xlim, ylim
-# plt.ylim(ymin=0, ymax=950)
-#
-# # legend
-# plt.legend(method, ncol=2, columnspacing=0.5, frameon=False, fancybox=True)
-#
-# # show or save
-# # plt.show()
-# plt.savefig("figs/" + data_name + "-cluster.png", dpi=800, bbox_inches='tight', transparent=True)
-#
-#
-# # Throughput
-# pd.options.mode.chained_assignment = None
-# num_vec = 500 * 1000
-# exact[3] = num_vec / exact[3]
-# baseline[3] = num_vec / baseline[3]
-# uniform[3] = num_vec / uniform[3]
-# nonuniform[3] = num_vec / nonuniform[3]
-#
-# plt.figure(2)
-# plt.plot(exact[0], exact[3], marker='o', color='r')
-# plt.plot(baseline[0], baseline[3], marker='*', color='g')
-# plt.plot(uniform[0], uniform[3], marker='s', color='b')
-# plt.plot(nonuniform[0], nonuniform[3], marker='+', color='k')
-#
-# # labels
-# plt.xlabel('number of sites (Alarm)')
-# plt.ylabel('throughput (events/sec)')
-#
-# # xlim, ylim
-# plt.ylim(ymin=0)
-# # if data_name == 'alarm':
-# #     plt.ylim(ymax=2800)
-# # elif data_name == 'hepar2':
-# #     plt.ylim(ymax=1200)
-#
-# # legend
-# # if data_name == 'alarm':
-# #     plt.legend(method, ncol=2, bbox_to_anchor=(0.5, -0.05),
-# #                loc='lower center', columnspacing=0.5)
-#
-# # show or save
-# # plt.show()
-# plt.savefig("figs/" + data_name + "-throughput.png", dpi=800, bbox_inches='tight')
+# update time
+plt.figure(1)
+plt.plot(x, skmpp_update, marker='o', color='r')
+plt.plot(x, cache_update, marker='*', color='g')
+plt.plot(x, rcc_update, marker='s', color='b')
+
+# x-ticks
+plt.xticks(np.arange(length), ('100', '500', '1000', '2000', '3000', '4000', '5000'))
+
+# labels
+plt.xlabel('query interval')
+plt.ylabel('total update time (second)')
+
+# legend
+plt.legend(method)
+
+plt.ylim(ymin=0)
+# plt.show()
+plt.savefig("figs/" + data_name + "-update.png", dpi=600, bbox_inches='tight')  # transparent
