@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 algo = ['firstseq', 'skmpp', 'cache', 'rcc', 'hybrid_12']
 method = ['streamkm++', 'CC', 'RCC']
 data_name = 'covtype'
-k = 20
-query_interval = [100, 500, 1000, 2000, 3000, 4000, 5000]
+k = 30
+#query_interval = [100, 500, 1000, 2000, 3000, 4000, 5000]
+query_interval = [50, 100, 200, 400, 800, 1600, 3200]
 length = len(query_interval)
 firstseq_query = []
 skmpp_query = []
@@ -16,7 +17,7 @@ rcc_query = []
 
 # read data
 for i in range(length):
-    folder = data_name + '/k-' + str(k) + '/queryinterval-' + str(query_interval[i])
+    folder = 'clustering result/' + data_name + '/k-' + str(k) + '/queryinterval-' + str(query_interval[i])
     # with open(folder + '/firstseq/querytime' + '.txt') as f:
     #     firstseq_query[i] = sum(list(map(float, f.read().splitlines())))
     with open(folder + '/skmpp/querytime' + '.txt') as f:
@@ -58,9 +59,9 @@ mpl.rcParams['lines.markersize'] = 10
 mpl.rcParams['font.size'] = 20
 mpl.rcParams['xtick.labelsize'] = 18
 mpl.rcParams['ytick.labelsize'] = 18
-mpl.rcParams['legend.fontsize'] = 17
-mpl.rcParams['figure.figsize'] = [5.2, 3.9]
-# mpl.rcParams['legend.frameon'] = False
+mpl.rcParams['legend.fontsize'] = 14
+mpl.rcParams['figure.figsize'] = [5.2, 3.76] # intrusion hight=4.1
+mpl.rcParams['legend.frameon'] = False
 
 
 # plot begins
